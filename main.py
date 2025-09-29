@@ -1,12 +1,15 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Response
 from rembg import remove
 
 app = FastAPI()
 
 @app.get("/")
-@app.head("/")  # مهم جداً
 def root():
     return {"message": "Server is running ✅"}
+
+@app.head("/")
+def healthcheck():
+    return Response(status_code=200)
 
 @app.post("/api/remove")
 async def remove_bg(file: UploadFile = File(...)):
