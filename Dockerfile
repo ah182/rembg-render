@@ -1,18 +1,16 @@
-from fastapi import FastAPI, UploadFile, File, Response
-from rembg import remove
+FROM python:3.11-slim
 
-app = FastAPI()
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libglib2.0-0 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
 
-@app.get("/")
-def root():
-    return {"message": "Server is running ✅"}
+WORKDIR /app
+COPY . /app
 
-@app.head("/")
-def healthcheck():
-    return Response(status_code=200)
+RUN pip install --no-cache-dir fastapi uvicorn rembg onnxruntime python-multipart
 
-@app.post("/api/remove")
-async def remove_bg(file: UploadFile = File(...)):
-    input_bytes = await file.read()
-    output_bytes = remove(input_bytes)
-    return {"removed": len(output_bytes)}
+EXPOSE 10000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
