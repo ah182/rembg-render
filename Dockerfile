@@ -14,8 +14,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # نسخ باقي ملفات المشروع
 COPY . .
 
-# ✅ Preload الموديل بعد ما rembg اتسطب
-RUN python -c "from rembg import new_session; new_session()"
-
-# تشغيل السيرفر على Render
+# تشغيل السيرفر
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
