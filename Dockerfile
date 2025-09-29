@@ -6,12 +6,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# نسخ ملفات المشروع
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
 
 # Preload الموديل وقت الـ Build (عشان يكون جاهز)
 RUN python -c "from rembg import new_session; new_session()"
