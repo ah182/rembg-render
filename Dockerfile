@@ -1,16 +1,20 @@
+# استخدم Python 3.11 كـ base image
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y \
+# تثبيت المكتبات الأساسية
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libglib2.0-0 \
-    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
+# نسخ ملفات المشروع
 WORKDIR /app
-COPY . /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir fastapi uvicorn rembg onnxruntime python-multipart
+COPY . .
 
-EXPOSE 10000
+# Preload الموديل وقت الـ Build (عشان يكون جاهز)
+RUN python -c "from rembg import new_session; new_session()"
 
+# تشغيل السيرفر على Render
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
