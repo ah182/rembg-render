@@ -1,18 +1,19 @@
-from fastapi import FastAPI, UploadFile, File, Response
+from fastapi import FastAPI, UploadFile, File
 from rembg import remove
+from fastapi.responses import JSONResponse, Response
+import uvicorn
 
 app = FastAPI()
 
 @app.get("/")
-def root():
+def health_check():
     return {"message": "Server is running ✅"}
-
-@app.head("/")
-def healthcheck():
-    return Response(status_code=200)
 
 @app.post("/api/remove")
 async def remove_bg(file: UploadFile = File(...)):
-    input_bytes = await file.read()
-    output_bytes = remove(input_bytes)
-    return {"removed": len(output_bytes)}
+    image_data = await file.read()
+    result = remove(image_data)
+    return Response(content=result, media_type="image/png")
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=10000)
