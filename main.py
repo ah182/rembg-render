@@ -4,7 +4,7 @@ from rembg import remove
 app = FastAPI()
 
 @app.get("/")
-@app.head("/")  # <-- أضف دعم للـ HEAD هنا
+@app.head("/")  # مهم جداً
 def root():
     return {"message": "Server is running ✅"}
 
