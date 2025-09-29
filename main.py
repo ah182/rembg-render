@@ -1,7 +1,10 @@
 import os
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, Response
-from rembg import remove
+from rembg import remove, new_session
+
+# ✅ Preload الموديل مرة واحدة عند بدء السيرفر
+session = new_session()
 
 app = FastAPI()
 
@@ -12,7 +15,7 @@ def health_check():
 @app.post("/api/remove")
 async def remove_bg(file: UploadFile = File(...)):
     image_data = await file.read()
-    result = remove(image_data)
+    result = remove(image_data, session=session)
     return Response(content=result, media_type="image/png")
 
 if __name__ == "__main__":
