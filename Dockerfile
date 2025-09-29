@@ -7,12 +7,12 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
-# ننسخ ملفات المشروع داخل الـ image
+# ننسخ ملفات المشروع
 WORKDIR /app
 COPY main.py /app/main.py
 
 # نثبت المكتبات المطلوبة
-RUN pip install --no-cache-dir fastapi uvicorn rembg onnxruntime
+RUN pip install --no-cache-dir fastapi uvicorn rembg onnxruntime python-multipart
 
 EXPOSE 10000
 
